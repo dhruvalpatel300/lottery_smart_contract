@@ -1,3 +1,4 @@
+import pytest
 from brownie import network, accounts, config, MockV3Aggregator, Contract, VRFCoordinatorMock, LinkToken, interface
 
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
@@ -46,7 +47,7 @@ def get_contract(contract_name):
             deploy_mocks()
         contract = contract_type[-1]
     else:
-        contract_address = config["network"][network.show_active()][contract_name]
+        contract_address = config["networks"][network.show_active()][contract_name]
         contract = Contract.from_abi(name=contract_type._name, address=contract_address, abi=contract_type.abi)
     return contract
 
@@ -60,3 +61,12 @@ def fund_with_link(contract_address, account=None, link_token=None, amount=10000
     tx.wait(1)
     print("Fund contract!")
     return tx
+
+
+def check_skip_test(func):
+    def wrapper():
+        if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+            pytest.skip()
+        else:
+            func()
+    return wrapper

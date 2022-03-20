@@ -1,14 +1,13 @@
 import pytest
-from brownie import network, exceptions
+from brownie import exceptions
 from web3 import Web3
 
 from scripts.deploy_lottery import deploy_lottery
-from scripts.utils import LOCAL_BLOCKCHAIN_ENVIRONMENTS, get_account, fund_with_link, get_contract
+from scripts.utils import get_account, fund_with_link, get_contract, check_skip_test
 
 
+@check_skip_test
 def test_get_entrance_fee():
-    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
-        pytest.skip()
     # Arrange
     lottery = deploy_lottery()
     # Act
@@ -21,6 +20,7 @@ def test_get_entrance_fee():
     assert expected_entrance_fee == entrance_fee
 
 
+@check_skip_test
 def test_cant_enter_unless_started():
     if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         pytest.skip()
@@ -29,9 +29,8 @@ def test_cant_enter_unless_started():
         lottery.enter({"from": get_account(), "value": lottery.getEntranceFee()})
 
 
+@check_skip_test
 def test_can_start_and_enter_lottery():
-    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
-        pytest.skip()
     lottery = deploy_lottery()
     account = get_account()
     lottery.startLottery({"from": account})
@@ -39,9 +38,8 @@ def test_can_start_and_enter_lottery():
     assert lottery.players(0) == account
 
 
+@check_skip_test
 def test_can_end_the_lottery():
-    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
-        pytest.skip()
     lottery = deploy_lottery()
     account = get_account()
     lottery.startLottery({"from": account})
@@ -51,9 +49,8 @@ def test_can_end_the_lottery():
     assert lottery.lottery_state() == 2
 
 
+@check_skip_test
 def test_can_pick_winner_correctly():
-    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
-        pytest.skip()
     lottery = deploy_lottery()
     account = get_account()
     lottery.startLottery({"from": account})
