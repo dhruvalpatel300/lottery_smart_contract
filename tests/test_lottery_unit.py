@@ -22,8 +22,6 @@ def test_get_entrance_fee():
 
 @check_skip_test
 def test_cant_enter_unless_started():
-    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
-        pytest.skip()
     lottery = deploy_lottery()
     with pytest.raises(exceptions.VirtualMachineError):
         lottery.enter({"from": get_account(), "value": lottery.getEntranceFee()})
