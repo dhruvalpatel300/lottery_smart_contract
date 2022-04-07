@@ -9,6 +9,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 // - https://stackoverflow.com/a/66799729
 // - https://stackoverflow.com/a/69830615
 
+// Auther: Dhruval Patel
 
 contract Lottery is VRFConsumerBase, Ownable {
     address payable[] public players;
